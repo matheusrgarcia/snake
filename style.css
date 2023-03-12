@@ -1,0 +1,33 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: grid;
+  height: 100%;
+  align-content: center;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+}
+
+.block {
+  border: 1px solid black;
+  height: 32px;
+  width: 32px;
+}
+
+.snake {
+  height: 100%;
+  background-color: black;
+}
+
+.apple {
+  height: 100%;
+  background-color: red;
+}
