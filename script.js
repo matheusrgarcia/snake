@@ -223,6 +223,9 @@ function pause() {
 
 function setDificulty(dificulty) {
   switch (dificulty) {
+    case "EXTREME":
+      FPS = 25;
+      break;
     case "HARD":
       FPS = 50;
       break;
