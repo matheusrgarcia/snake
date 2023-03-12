@@ -31,3 +31,8 @@ main {
   height: 100%;
   background-color: red;
 }
+
+.points {
+  margin: 0;
+  padding: 0;
+}

@@ -8,9 +8,13 @@ let POINTS = 0;
 const windowXsize = window.innerWidth;
 const windowYsize = window.innerHeight;
 
-const FIELD_X_SIZE = windowXsize / 32 - 4;
+const BLOCK_SIZE = 32;
 
-const FIELD_Y_SIZE = windowYsize / 32 - 4;
+const PADDING_MARGIN_LIMITS = 4;
+
+const FIELD_X_SIZE = windowXsize / BLOCK_SIZE - PADDING_MARGIN_LIMITS;
+
+const FIELD_Y_SIZE = windowYsize / BLOCK_SIZE - PADDING_MARGIN_LIMITS;
 
 let randomXposition = Math.floor(FIELD_X_SIZE / 2);
 let randomYposition = Math.floor(FIELD_Y_SIZE / 2);
@@ -41,6 +45,17 @@ function start() {
     }
     updateSnakePosition();
   }, FPS);
+}
+
+function resetGame() {
+  DIRECTION = "Right";
+  X_AXIS_POSITION = 0;
+  Y_AXIS_POSITION = 0;
+  POINTS = 0;
+  const pointsLabel = document.getElementById("points");
+  pointsLabel.innerText = `Pontos: ${POINTS}`;
+  updateApplePosition();
+  generateApple();
 }
 
 function generateViewBlocks() {
@@ -103,7 +118,6 @@ function updateSnakePosition() {
   ) {
     updateApplePosition();
     generateApple();
-
     handlePoints();
   }
 }
@@ -119,28 +133,42 @@ function clearSnakePosition() {
   allSnakes[0]?.remove();
 }
 
+function gameOver() {
+  resetGame();
+
+  alert("Você perdeu ANIMAL");
+}
+
 function goRight() {
   if (X_AXIS_POSITION + 1 <= FIELD_X_SIZE) {
     X_AXIS_POSITION += 1;
+    return;
   }
+  gameOver();
 }
 
 function goLeft() {
   if (X_AXIS_POSITION - 1 >= 0) {
     X_AXIS_POSITION -= 1;
+    return;
   }
+  gameOver();
 }
 
 function goUp() {
   if (Y_AXIS_POSITION - 1 >= 0) {
     Y_AXIS_POSITION -= 1;
+    return;
   }
+  gameOver();
 }
 
 function goDown() {
   if (Y_AXIS_POSITION + 1 <= FIELD_Y_SIZE) {
     Y_AXIS_POSITION += 1;
+    return;
   }
+  gameOver();
 }
 
 window.addEventListener("keydown", (event) => {
