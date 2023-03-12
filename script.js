@@ -3,14 +3,16 @@ window.onload = start;
 let X_AXIS_POSITION = 0;
 let Y_AXIS_POSITION = 0;
 
-let POINTS = 0;
+let GAME_POINTS = 0;
 
 const windowXsize = window.innerWidth;
 const windowYsize = window.innerHeight;
 
 const BLOCK_SIZE = 32;
 
-const PADDING_MARGIN_LIMITS = 4;
+const PADDING_MARGIN_LIMITS = windowXsize < 1500 ? 4 : 8;
+
+console.log(PADDING_MARGIN_LIMITS);
 
 const FIELD_X_SIZE = windowXsize / BLOCK_SIZE - PADDING_MARGIN_LIMITS;
 
@@ -21,39 +23,47 @@ let randomYposition = Math.floor(FIELD_Y_SIZE / 2);
 
 let DIRECTION = "Right";
 
-const FPS = 100;
+let FPS = 100;
 
 function start() {
   console.log("Game Start");
   generateViewBlocks();
   generateApple();
 
-  setInterval(() => {
-    switch (DIRECTION) {
-      case "Right":
-        goRight();
-        break;
-      case "Left":
-        goLeft();
-        break;
-      case "Up":
-        goUp();
-        break;
-      case "Down":
-        goDown();
-        break;
-    }
-    updateSnakePosition();
-  }, FPS);
+  var timing = function () {
+    const currentFPS = FPS;
+    const timer = setInterval(() => {
+      switch (DIRECTION) {
+        case "Right":
+          goRight();
+          break;
+        case "Left":
+          goLeft();
+          break;
+        case "Up":
+          goUp();
+          break;
+        case "Down":
+          goDown();
+          break;
+      }
+      if (FPS !== currentFPS) {
+        clearInterval(timer);
+        timing();
+      }
+      updateSnakePosition();
+    }, FPS);
+  };
+  timing();
 }
 
 function resetGame() {
   DIRECTION = "Right";
   X_AXIS_POSITION = 0;
   Y_AXIS_POSITION = 0;
-  POINTS = 0;
+  GAME_POINTS = 0;
   const pointsLabel = document.getElementById("points");
-  pointsLabel.innerText = `Pontos: ${POINTS}`;
+  pointsLabel.innerText = `Pontos: ${GAME_POINTS}`;
   updateApplePosition();
   generateApple();
 }
@@ -123,9 +133,9 @@ function updateSnakePosition() {
 }
 
 function handlePoints() {
-  POINTS++;
+  GAME_POINTS++;
   const pointsLabel = document.getElementById("points");
-  pointsLabel.innerText = `Pontos: ${POINTS}`;
+  pointsLabel.innerText = `Pontos: ${GAME_POINTS}`;
 }
 
 function clearSnakePosition() {
@@ -134,9 +144,9 @@ function clearSnakePosition() {
 }
 
 function gameOver() {
-  resetGame();
+  alert("Você perdeu ANIMAL, seus pontos foram: " + GAME_POINTS);
 
-  alert("Você perdeu ANIMAL");
+  resetGame();
 }
 
 function goRight() {
@@ -187,3 +197,14 @@ window.addEventListener("keydown", (event) => {
       break;
   }
 });
+
+function setDificulty(dificulty) {
+  switch (dificulty) {
+    case "HARD":
+      FPS = 50;
+      break;
+    case "EASY":
+      FPS = 100;
+      break;
+  }
+}
