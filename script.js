@@ -25,14 +25,28 @@ let DIRECTION = "Right";
 
 let FPS = 100;
 
+let isPaused = false;
+
+function clearGameBoard() {
+  const rows = document.getElementsByClassName("row");
+  Array.from(rows).forEach((row) => {
+    row.remove();
+  });
+}
+
 function start() {
   console.log("Game Start");
+  clearGameBoard();
   generateViewBlocks();
   generateApple();
 
-  var timing = function () {
-    const currentFPS = FPS;
+  var runFrames = function () {
+    const oldFPS = FPS;
+
     const timer = setInterval(() => {
+      if (isPaused) {
+        clearInterval(timer);
+      }
       switch (DIRECTION) {
         case "Right":
           goRight();
@@ -47,14 +61,14 @@ function start() {
           goDown();
           break;
       }
-      if (FPS !== currentFPS) {
+      if (FPS !== oldFPS) {
         clearInterval(timer);
-        timing();
+        runFrames();
       }
       updateSnakePosition();
     }, FPS);
   };
-  timing();
+  runFrames();
 }
 
 function resetGame() {
@@ -144,7 +158,7 @@ function clearSnakePosition() {
 }
 
 function gameOver() {
-  alert("Você perdeu ANIMAL, seus pontos foram: " + GAME_POINTS);
+  alert("Você perdeu, seus pontos foram: " + GAME_POINTS);
 
   resetGame();
 }
@@ -197,6 +211,15 @@ window.addEventListener("keydown", (event) => {
       break;
   }
 });
+
+function pause() {
+  if (isPaused) {
+    isPaused = false;
+    start();
+    return;
+  }
+  isPaused = true;
+}
 
 function setDificulty(dificulty) {
   switch (dificulty) {
